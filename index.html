@@ -36,13 +36,55 @@
                         </v-flex>
                         <div v-show="first">
                             <h4 class="padding-bottom">This website helps two people that speak two different languages communicate about getting directions on Duke campus</h4>
-                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'en'), toSecond()">English</v-btn>
-                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'es'), toSecond()">Español</v-btn>
-                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'fr'), toSecond()">Français</v-btn>
-                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'zh-Hant'), toSecond()">繁體中文</v-btn>
-                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'hi'), toSecond()">हिंदी</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'en'), toOnePointFive()">English</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'es'), toOnePointFive()">Español</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'fr'), toOnePointFive()">Français</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'zh-Hant'), toOnePointFive()">繁體中文</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'hi'), toOnePointFive()">हिंदी</v-btn>
                             <v-flex xs12 d-flex> </v-flex>
                         </div>
+                        <div v-show="onePointFive" >
+                            <v-flex xs12 v-if="primaryLanguage=='en'">
+                                <h2 class="padding-bottom" >I would like to...</h2>
+                                
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='es'">
+                                <h2 class="padding-bottom" >Me gustaría...</h2>
+                                
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='fr'">
+                                <h2 class="padding-bottom" >J'aimerais...</h2>
+                                
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='zh-Hant'">
+                                <h2 class="padding-bottom" >我想要...</h2>
+                                
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='hi'">
+                                <h2 class="padding-bottom" >मैं...</h2>
+                                
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn  large @click="toSecond()" block color="primary">
+                                    <div v-if="selectedFromBox=='en'">Ask for directions
+                                    </div>
+                                    <div v-if="selectedFromBox=='es'">Preguntar por direcciones</div>
+                                    <div v-if="selectedFromBox=='fr'">Demander des directions</div>
+                                    <div v-if="selectedFromBox=='zh-Hant'">詢問方向</div>
+                                    <div v-if="selectedFromBox=='hi'">दिशा पूछो</div>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn  large @click="toThird() , clearInput()" block color="primary">
+                                    <div v-if="selectedFromBox=='en'">Give directions
+                                    </div>
+                                    <div v-if="selectedFromBox=='es'">Dar direcciones</div>
+                                    <div v-if="selectedFromBox=='fr'">Donner des directives</div>
+                                    <div v-if="selectedFromBox=='zh-Hant'">給出指示</div>
+                                    <div v-if="selectedFromBox=='hi'">दिशा - निर्देश देनाो</div>
+                                </v-btn>
+                            </v-flex>
+                        </div> 
                         <div v-show="second" class="padding-bottom">
                             <v-flex xs12 v-if="primaryLanguage=='en'">
                                 <h2 class="padding-bottom" >Where are you going?</h2>
@@ -66,9 +108,11 @@
                                 <h2 class="padding-bottom" >तुम कहाँ जा रहे हो?</h2>
                                 <v-text-field solo placeholder="गंतव्य" v-model="destination"></v-text-field>
                             </v-flex>
+<!--
                             <v-btn @click.native="toFirst()">
                                 <v-icon>{{'arrow_left'}}</v-icon>
                             </v-btn>
+-->
                             <v-btn style="float:right" @click="generateQuestion(), translateText('#tip', tipLabel), translateText('#textInput', inputText), toThird()">
                                 <v-icon>{{'arrow_right'}}</v-icon>
                             </v-btn>
@@ -89,8 +133,27 @@
                             <v-flex xs12 v-if="selectedFromBox=='hi'">
                                 <p class="padding-bottom" >युक्ति: दूसरे व्यक्ति से उनके निर्देश टाइप करने के लिए कहें, इसलिए उनका भी अनुवाद किया जा सकता है!</p>
                             </v-flex>
+<!--
                             <v-flex xs12>
                                 <v-textarea id="textInput" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                            </v-flex>
+-->
+                            <v-flex xs12>
+                                <div v-if="selectedFromBox=='en'">
+                                    <v-textarea id="textInput" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='es'">
+                                    <v-textarea id="textInput" placeholder="Ingrese texto" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='fr'">
+                                    <v-textarea id="textInput" placeholder="Entrez du texte" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='zh-Hant'">
+                                    <v-textarea id="textInput" placeholder="輸入文字" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='hi'">
+                                    <v-textarea id="textInput" placeholder="लिखना प्रारम्भ करें" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                                </div>
                             </v-flex>
                             <v-flex xs12 d-flex>
                                 <div class="language-dropdown">
@@ -143,11 +206,13 @@
                                 </v-btn>
                             </v-flex>
                             <v-flex xs12>
+<!--
                                 <v-btn @click="toSecond()">
                                     <v-icon>{{'arrow_left'}}</v-icon>
                                 </v-btn>
+-->
                                 <a href="https://duke.qualtrics.com/jfe/form/SV_4IXKx8eIgfkqms5">
-                                <v-btn style="float:right">
+                                <v-btn block>
                                     <div v-if="selectedFromBox=='en'">Complete Interaction</div>
                                     <div v-if="selectedFromBox=='es'">Interacción completa</div>
                                     <div v-if="selectedFromBox=='fr'">Interaction complète</div>
@@ -214,7 +279,10 @@
                 }).catch(error => console.error('Error:', error));
             }
             , methods: {
-                errorTrue() {
+                clearInput(){
+                    this.inputText = ''
+                }
+                ,errorTrue() {
                     this.error = true
                     this.third = false
                 }, errorFalse() {
@@ -225,18 +293,28 @@
                     let t = this.selectedToBox
                     this.selectedToBox = f;
                     this.selectedFromBox = t;
-                }, toSecond() {
+                }, toOnePointFive (){
+                    this.first = false;
+                    this.second = false;
+                    this.third = false;
+                    this.onePointFive = true;
+                }
+                
+                ,toSecond() {
                     this.first = false;
                     this.second = true;
                     this.third = false;
+                    this.onePointFive = false
                 }, toThird() {
                     this.first = false;
                     this.second = false;
                     this.third = true;
+                    this.onePointFive = false
                 }, toFirst() {
                     this.first = true;
                     this.second = false;
                     this.third = false;
+                    this.onePointFive = false
                 }, primaryTranslate(id, textVar, language) {
                     this.primaryLanguage = language
                     let text = textVar
@@ -303,6 +381,7 @@
                 , errorMsg: 'There seems to be an error in the translated text. It is not understandable.'
                 , error: false
                 , first: true
+                , onepointfive: false
                 , second: false
                 , third: false
                 , chooseLanguage: 'Choose Language'
