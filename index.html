@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> </head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-content>
+                <div class="nav"> <a href="./index.html"><h1 style="color:white" >Translate!</h1></a> </div>
+                <v-container>
+                    <v-flex xs12>
+                        <br>
+                        <v-flex xs12>
+                            <div v-show="error">
+                                <div v-if="selectedFromBox=='en' || selectedToBox=='en'">
+                                    <h2>There seems to be an error in the translated text. It is not understandable.</h2></div>
+                                <div v-if="selectedFromBox=='es' || selectedToBox=='es'">
+                                    <h2>Parece haber un error en el texto traducido. No es comprensible</h2></div>
+                                <div v-if="selectedFromBox=='fr' || selectedToBox=='fr'">
+                                    <h2>Il semble y avoir une erreur dans le texte traduit. Ce n'est pas compréhensible.</h2></div>
+                                <div v-if="selectedFromBox=='zh-Hant' || selectedToBox=='zh-Hant'">
+                                    <h2>翻譯文本似乎有錯誤。 這是不可理解的。</h2></div>
+                                <div v-if="selectedFromBox=='hi' || selectedToBox=='hi'">
+                                    <h2>अनुवादित पाठ में एक त्रुटि प्रतीत होती है। यह समझ में नहीं आता है।</h2></div>
+                                <v-btn @click="errorFalse()">
+                                    <v-icon>{{'close'}}</v-icon>
+                                </v-btn>
+                            </div>
+                        </v-flex>
+                        <div v-show="first">
+                            <h4 class="padding-bottom">This website helps two people that speak two different languages communicate about getting directions on Duke campus</h4>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'en'), toSecond()">English</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'es'), toSecond()">Español</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'fr'), toSecond()">Français</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'zh-Hant'), toSecond()">繁體中文</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'hi'), toSecond()">हिंदी</v-btn>
+                            <v-flex xs12 d-flex> </v-flex>
+                        </div>
+                        <div v-show="second" class="padding-bottom">
+                            <v-flex xs12 v-if="primaryLanguage=='en'">
+                                <h2 class="padding-bottom" >Where are you going?</h2>
+                                <v-flex xs12>
+                                    <v-text-field solo placeholder="Destination" v-model="destination"></v-text-field>
+                                </v-flex>
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='es'">
+                                <h2 class="padding-bottom" >¿A dónde vas?</h2>
+                                <v-text-field solo placeholder="Destino" v-model="destination"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='fr'">
+                                <h2 class="padding-bottom" >Où allez-vous?</h2>
+                                <v-text-field solo placeholder="Destination" v-model="destination"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='zh-Hant'">
+                                <h2 class="padding-bottom" >你要去哪裡？</h2>
+                                <v-text-field solo placeholder="目的地" v-model="destination"></v-text-field>
+                            </v-flex>
+                            <v-flex xs12 v-if="primaryLanguage=='hi'">
+                                <h2 class="padding-bottom" >तुम कहाँ जा रहे हो?</h2>
+                                <v-text-field solo placeholder="गंतव्य" v-model="destination"></v-text-field>
+                            </v-flex>
+                            <v-btn @click.native="toFirst()">
+                                <v-icon>{{'arrow_left'}}</v-icon>
+                            </v-btn>
+                            <v-btn style="float:right" @click="generateQuestion(), translateText('#tip', tipLabel), translateText('#textInput', inputText), toThird()">
+                                <v-icon>{{'arrow_right'}}</v-icon>
+                            </v-btn>
+                        </div>
+                        <div v-show="third">
+                            <v-flex xs12 v-if="selectedFromBox=='en'">
+                                <p class="padding-bottom" >Tip: Ask the other person to type their directions, so they can be translated too!</p>
+                            </v-flex>
+                            <v-flex xs12 v-if="selectedFromBox=='es'">
+                                <p class="padding-bottom" >Consejo: ¡Pídale a la otra persona que escriba sus instrucciones para que también puedan ser traducidas!</p>
+                            </v-flex>
+                            <v-flex xs12 v-if="selectedFromBox=='fr'">
+                                <p class="padding-bottom" >Conseil: Demandez à l’autre personne de taper ses instructions pour qu’elles puissent être traduites aussi!</p>
+                            </v-flex>
+                            <v-flex xs12 v-if="selectedFromBox=='zh-Hant'">
+                                <p class="padding-bottom" >提示：請其他人輸入他們的指示，這樣他們也可以翻譯！</p>
+                            </v-flex>
+                            <v-flex xs12 v-if="selectedFromBox=='hi'">
+                                <p class="padding-bottom" >युक्ति: दूसरे व्यक्ति से उनके निर्देश टाइप करने के लिए कहें, इसलिए उनका भी अनुवाद किया जा सकता है!</p>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-textarea id="textInput" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                            </v-flex>
+                            <v-flex xs12 d-flex>
+                                <div class="language-dropdown">
+                                    <v-select id="fromBox" v-model="selectedFromBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                                </div>
+                                <v-btn icon>
+                                    <v-icon @click="switchLanguages()">{{'swap_horiz'}}</v-icon>
+                                </v-btn>
+                                <div class="language-dropdown">
+                                    <v-select v-if="selectedFromBox=='en'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                                    <v-select v-if="selectedFromBox=='es'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Elige lengua" solo></v-select>
+                                    <v-select v-if="selectedFromBox=='fr'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choisissez la langue" solo></v-select>
+                                    <v-select v-if="selectedFromBox=='zh-Hant'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="選擇語言" solo></v-select>
+                                    <v-select v-if="selectedFromBox=='hi'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="भाषा चुनें" solo></v-select>
+                                </div>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn class="padding-bottom" block large color="success" @click="getTranslation()">
+                                    <div v-if="selectedFromBox=='en'">Translate!</div>
+                                    <div v-if="selectedFromBox=='es'">¡Traducir!</div>
+                                    <div v-if="selectedFromBox=='fr'">Traduire!</div>
+                                    <div v-if="selectedFromBox=='zh-Hant'">翻譯！</div>
+                                    <div v-if="selectedFromBox=='hi'">अनुवाद करना!ि</div>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex xs12>
+                                <div v-if="selectedFromBox=='en'">
+                                    <v-textarea id="translationResult" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='es'">
+                                    <v-textarea id="translationResult" placeholder="Ingrese texto" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='fr'">
+                                    <v-textarea id="translationResult" placeholder="Entrez du texte" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='zh-Hant'">
+                                    <v-textarea id="translationResult" placeholder="輸入文字" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
+                                </div>
+                                <div v-if="selectedFromBox=='hi'">
+                                    <v-textarea id="translationResult" placeholder="लिखना प्रारम्भ करें" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
+                                </div>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn class="padding-bottom"  @click="errorTrue()" block outline color="error">
+                                    <div v-if="selectedFromBox=='en'">Error in Translation</div>
+                                    <div v-if="selectedFromBox=='es'">Error en la traducción</div>
+                                    <div v-if="selectedFromBox=='fr'">Erreur de traduction</div>
+                                    <div v-if="selectedFromBox=='zh-Hant'">翻譯錯誤</div>
+                                    <div v-if="selectedFromBox=='hi'">अनुवाद में त्रुटि</div>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn @click="toSecond()">
+                                    <v-icon>{{'arrow_left'}}</v-icon>
+                                </v-btn>
+                                <a href="https://duke.qualtrics.com/jfe/form/SV_4IXKx8eIgfkqms5">
+                                <v-btn style="float:right">
+                                    <div v-if="selectedFromBox=='en'">Complete Interaction</div>
+                                    <div v-if="selectedFromBox=='es'">Interacción completa</div>
+                                    <div v-if="selectedFromBox=='fr'">Interaction complète</div>
+                                    <div v-if="selectedFromBox=='zh-Hant'">完成互動</div>
+                                    <div v-if="selectedFromBox=='hi'">पूर्ण बातचीत</div>
+                                </v-btn>
+                                    </a>
+                            </v-flex>
+                        </div>
+                    </v-flex>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="src/main.js"></script>
+    <script src='https://unpkg.com/vuetify-clipboard-input'></script>
+    <script>
+        new Vue({
+            el: '#app'
+            , watch: {
+                primaryLanguage: function (val) {
+                    this.selectedFromBox = val
+                    this.chooseLanguage = ""
+                        //                    document.querySelector('#fromBox').placeholder = ''
+                    console.log(this.selectedFromBox)
+                    let text = this.whereLabel
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector('#whereBtn').label = response[0].translations[0].text
+                            console.log(document.querySelector('#whereBtn').value)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+            }
+            , inputText: function (val) {
+                let text = val
+                let f = 'en'
+                let t = this.primaryLanguage
+                const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                fetch(url, {
+                    method: 'POST'
+                    , body: `[{'Text': '` + text + `'}]`
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                    }
+                }).then(res => res.json()).then(function (response) {
+                    if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                        document.querySelector('id').value = response[0].translations[0].text
+                        console.log(document.querySelector('#whereBtn').value)
+                    }
+                }).catch(error => console.error('Error:', error));
+            }
+            , methods: {
+                errorTrue() {
+                    this.error = true
+                    this.third = false
+                }, errorFalse() {
+                    this.error = false
+                    this.third = true
+                }, switchLanguages() {
+                    let f = this.selectedFromBox
+                    let t = this.selectedToBox
+                    this.selectedToBox = f;
+                    this.selectedFromBox = t;
+                }, toSecond() {
+                    this.first = false;
+                    this.second = true;
+                    this.third = false;
+                }, toThird() {
+                    this.first = false;
+                    this.second = false;
+                    this.third = true;
+                }, toFirst() {
+                    this.first = true;
+                    this.second = false;
+                    this.third = false;
+                }, primaryTranslate(id, textVar, language) {
+                    this.primaryLanguage = language
+                    let text = textVar
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector(id).value = response[0].translations[0].text
+                            console.log(document.querySelector('#whereBtn').value)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }, translateText(id, textVar) {
+                    let text = textVar
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector(id).value = response[0].translations[0].text
+                            console.log(document.querySelector('#whereBtn').value)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }, generateQuestion() {
+                    this.inputText = this.inputText + this.destination + '?';
+                }, getTranslation() {
+                    let text = this.inputText
+                    let fField = document.querySelector("#fromBox")
+                    let tField = document.querySelector("#toBox")
+                    let f = this.selectedFromBox
+                    let t = this.selectedToBox
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            console.log(response[0].translations[0].text)
+                            document.querySelector('#translationResult').value = response[0].translations[0].text
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+            }
+            , data: {
+                tipLabel: 'Tip: Ask the other person to type their directions, so they can be translated too!'
+                , errorMsg: 'There seems to be an error in the translated text. It is not understandable.'
+                , error: false
+                , first: true
+                , second: false
+                , third: false
+                , chooseLanguage: 'Choose Language'
+                , whereLabel: 'Where are you going?'
+                , translatedText: ''
+                , primaryLanguage: ''
+                , selectedToBox: ''
+                , selectedFromBox: ''
+                , newTo: ''
+                , newFrom: ''
+                , destination: ''
+                , inputText: 'Hi, could you please give me directions to '
+                , question: ''
+                , fullQuestions: ''
+                , languages: [
+                    {
+                        text: 'English'
+                        , value: 'en'
+                                }
+                                , {
+                        text: 'Español'
+                        , value: 'es'
+                                }
+                    , {
+                        text: 'Français'
+                        , value: 'fr'
+                                }
+                    , {
+                        text: '繁體中文'
+                        , value: 'zh-Hant'
+                                }
+                    , {
+                        text: 'हिंदी'
+                        , value: 'hi'
+                                }
+                            ]
+            }
+        })
+    </script>
+</body>
+
+</html>

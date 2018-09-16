@@ -1,0 +1,43 @@
+* {
+    font-family: "Roboto";
+    
+}
+.center {
+    text-align:center;
+    align-content: center;
+    align-items: center
+}
+
+.padding-bottom{
+    margin-bottom: 30px !important
+}
+
+.fake-header{
+    font-size: 100px
+}
+
+p {
+    font-size: 18px;
+}
+
+.nav {
+    padding: 10px;
+    background-color: teal;
+    color: white;
+    text-align: center;
+    margin-bottom:0px !important
+}
+
+.language-dropdown {
+    padding-left:10px;
+    padding-right: 10px;
+}
+
+.modal {
+    background-color: rgba(0, 0, 0, 0.75);
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+}

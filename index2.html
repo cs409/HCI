@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> </head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-content>
+                <div class="nav">
+                    <a href="./index.html"><h1 style="color:white" >Translate!</h1></a> </div>
+                <v-container>
+                    <v-flex xs12>
+                        <br>
+                        <!--
+                    <h2>Select Language</h2>
+                    <v-flex xs12 d-flex>
+                        <div class="language-dropdown">
+                            <v-select id="primaryLanguage" v-model="primaryLanguage" :items="languages" placeholder="Choose Language" solo></v-select>
+                        </div>
+                    </v-flex>
+                    <v-btn @click="translateText('#whereBtn', whereLabel)">
+                                    <v-icon>{{'arrow_right'}}</v-icon>
+                                </v-btn>
+-->
+                        <div v-show="error">
+                            <v-text-field class="fake-header" disabled=true id="errorFrom" value=""></v-text-field>
+                            <v-text-field class="fake-header" disabled=true id="errorTo" value=""></v-text-field>
+                            <v-btn @click="errorFalse()"><v-icon>{{'close'}}</v-icon></v-btn>
+                        </div>
+                        <div v-show="first">
+                            <h4>This website helps two people that speak two different languages communicate about getting directions on Duke campus</h4>
+                            
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'en'), toSecond()">English</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'es'), toSecond()">Español</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'fr'), toSecond()">Français</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'zh-Hant'), toSecond()">繁體中文</v-btn>
+                            <v-btn block color="primary" dark large @click="primaryTranslate('#whereBtn', whereLabel, 'hi'), toSecond()">हिंदी</v-btn>
+                            <v-flex xs12 d-flex>
+                    </v-flex>
+                            
+                        </div>
+                        <div v-show="second">
+<!--                            <v-text-field class="fake-header" disabled=true id="whereBtn" value=""></v-text-field>-->
+                            <v-text-field class="fake-header" disabled=true id="whereBtn" value=""></v-text-field>
+                            hi {{primaryLanguage}}
+                            <v-flex xs12>
+                                <v-text-field solo v-model="destination"></v-text-field>
+                            </v-flex>
+                            <v-btn @click.native="toFirst()">
+                                <v-icon>{{'arrow_left'}}</v-icon>
+                            </v-btn>
+                            <v-btn style="float:right" @click="generateQuestion(), translateText('#tip', tipLabel), translateText('#textInput', inputText), translatePlaceholder('#fromBox', chooseLanguage, primaryLanguage), translatePlaceholder('#toBox', chooseLanguage, primaryLanguage), toThird()">
+                                <v-icon>{{'arrow_right'}}</v-icon>
+                            </v-btn>
+                        </div>
+                        <div v-show="third">
+                            <v-text-field class="fake-header" disabled=true id="tip" value=""></v-text-field>
+                            <v-flex xs12>
+                                <v-textarea id="textInput" placeholder="Enter text" clear-icon='$vuetify.icons.clear' append-outer-icon="far fa-copy" solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                            </v-flex>
+                            <v-flex xs12 d-flex>
+                                <div class="language-dropdown">
+                                    <v-select id="fromBox" v-model="selectedFromBox" :items="languages" placeholder="Choose Language"  solo></v-select>
+                                </div>
+                                <v-btn icon>
+                                    <v-icon @click="switchLanguages()">{{'swap_horiz'}}</v-icon>
+                                </v-btn>
+                                <div class="language-dropdown">
+                                    <v-select id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                                </div>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn block color="success" @click="getTranslation()"><v-icon>{{'arrow_forward'}}</v-icon></v-btn>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-textarea id="translationResult" placeholder="Enter text" clear-icon='$vuetify.icons.clear' append-outer-icon="far fa-copy" solo name="input-7-4" label="" value=""></v-textarea>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn @click="errorTrue(), translatePlaceholder('#errorFrom', errorMsg, selectedFromBox), translatePlaceholder('#errorTo', errorMsg, selectedToBox)" block large color="error">
+                                    <v-icon>{{'error'}}</v-icon>
+                                </v-btn>
+                            </v-flex>
+                            <v-flex xs12>
+                                <v-btn @click="toSecond()">
+                                    <v-icon>{{'arrow_left'}}</v-icon>
+                                </v-btn>
+                                <v-btn style="float:right">Complete Interaction</v-btn>
+                            </v-flex>
+                        </div>
+                    </v-flex>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="src/main.js"></script>
+    <script>
+        new Vue({
+            el: '#app'
+            , watch: {
+                primaryLanguage: function (val) {
+                    this.selectedFromBox = val
+                    this.chooseLanguage=""
+                    let text = this.whereLabel
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector('#whereBtn').label = response[0].translations[0].text
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+            }
+            , inputText: function (val) {
+                let text = val
+                let f = 'en'
+                let t = this.primaryLanguage
+                const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                fetch(url, {
+                    method: 'POST'
+                    , body: `[{'Text': '` + text + `'}]`
+                    , headers: {
+                        'Content-Type': 'application/json'
+                        , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                    }
+                }).then(res => res.json()).then(function (response) {
+                    if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                        document.querySelector('id').value = response[0].translations[0].text
+                        console.log(document.querySelector('#whereBtn').value)
+                    }
+                }).catch(error => console.error('Error:', error));
+            }
+            , methods: {
+                errorTrue(){
+                    this.error=true
+                    this.third = false
+                }
+                , errorFalse(){
+                    this.error=false
+                    this.third = true
+                }
+                ,switchLanguages() {
+                    let f = this.selectedFromBox
+                    let t = this.selectedToBox
+                    this.selectedToBox = f;
+                    this.selectedFromBox = t;
+                }
+                , toSecond() {
+                    this.first = false;
+                    this.second = true;
+                    this.third = false;
+                }, toThird() {
+                    this.first = false;
+                    this.second = false;
+                    this.third = true;
+                }, toFirst() {
+                    this.first = true;
+                    this.second = false;
+                    this.third = false;
+                }, primaryTranslate(id, textVar, language) {
+                    this.primaryLanguage = language
+                    let text = textVar
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector(id).value = response[0].translations[0].text
+                            console.log(document.querySelector('#whereBtn').value)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }, translatePlaceholder(id, placeholderVar, lang) {
+                    let text = placeholderVar
+                    let f = 'en'
+                    let t = lang
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector(id).value = response[0].translations[0].text
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }, translateText(id, textVar) {
+                    let text = textVar
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            document.querySelector(id).value = response[0].translations[0].text
+                            console.log(document.querySelector('#whereBtn').value)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }, generateQuestion() {
+                    this.inputText = this.inputText + this.destination + '?';
+                }, getTranslation() {
+                    let text = this.inputText
+                    let fField = document.querySelector("#fromBox")
+                    let tField = document.querySelector("#toBox")
+                    let f = this.selectedFromBox
+                    let t = this.selectedToBox
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            console.log(response[0].translations[0].text)
+                            document.querySelector('#translationResult').value = response[0].translations[0].text
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+            }
+            , data: {
+                tipLabel: 'Tip: Ask the other person to type their directions, so they can be translated too!'
+                , errorMsg: 'There seems to be an error in the translated text. It is not understandable.'
+                , error: false
+                , first: true
+                , second: false
+                , third: false
+                , chooseLanguage: 'Choose Language'
+                , whereLabel: 'Where are you going?'
+                , translatedText: ''
+                , primaryLanguage: ''
+                , selectedToBox: ''
+                , selectedFromBox: ''
+                , newTo: ''
+                , newFrom: ''
+                , destination: ''
+                , inputText: 'Hi, could you please give me directions to '
+                , question: ''
+                , fullQuestions: ''
+                , languages: [
+                    {
+                        text: 'English'
+                        , value: 'en'
+                                }
+                                , {
+                        text: 'Español'
+                        , value: 'es'
+                                }
+                    , {
+                        text: 'Français'
+                        , value: 'fr'
+                                }
+                    , {
+                        text: '繁體中文'
+                        , value: 'zh-Hant'
+                                }
+                    , {
+                        text: 'हिंदी'
+                        , value: 'hi'
+                                }
+                            ]
+                , en: {
+                        name: 'English'
+                        , short: "en"
+                        , whereLabel: 'Where are you going?'
+                    }
+                }
+            
+        })
+    </script>
+</body>
+
+</html>

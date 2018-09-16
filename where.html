@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui"> </head>
+
+<body>
+    <div id="app">
+        <v-app>
+            <v-content>
+                <div class="nav">
+                    <h1>Translate!</h1> </div>
+                <v-container>
+                    <br>
+                    <h2>What is your priamary language?</h2>
+                    <v-flex xs12 d-flex>
+                        <div class="language-dropdown">
+                            <v-select id="primaryLanguage" v-model="primaryLanguage" :items="languages" placeholder="Choose Language" solo></v-select>
+                        </div>
+                    </v-flex>
+                    <v-flex sx12 d-flex>
+                        <v-btn @click="submitPrimaryLanguage()">Next</v-btn>
+                    </v-flex>
+                    <h2>{{whereLabel}}</h2>
+                    <v-flex xs12 sm6 md3>
+                        <v-text-field label="Where" placeholder="Location" solo v-model="destination"></v-text-field>
+                    </v-flex>
+                    <v-btn @click="generateQuestion()">Next</v-btn>
+                    <p>Tip: Ask the other person to type their directions, so they can be translated too!</p>
+                    <v-flex xs12 d-flex>
+                        <div class="language-dropdown">
+                            <v-select id="fromBox" v-model="selectedFromBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                        </div>
+                        <v-btn icon>
+                            <v-icon @click="switchLanguages()">{{'swap_horiz'}}</v-icon>
+                        </v-btn>
+                        <div class="language-dropdown">
+                            <v-select id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                        </div>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-textarea id="textInput" placeholder="Enter text" clearable=true clear-icon='$vuetify.icons.clear' append-outer-icon="far fa-copy" solo name="input-7-4" label="" v-model="inputText"></v-textarea>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-btn @click="getTranslation()">Translate!</v-btn>
+                    </v-flex>
+                    <v-flex xs12>
+                        <v-textarea id="translationResult" placeholder="Enter text" clearable=true clear-icon='$vuetify.icons.clear' append-outer-icon="far fa-copy" solo name="input-7-4" label="" value=""></v-textarea>
+                    </v-flex>
+                </v-container>
+            </v-content>
+        </v-app>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify/dist/vuetify.js"></script>
+    <script src="src/main.js"></script>
+    <script>
+        import { whereLabel } from './index.html'
+        
+        new Vue({
+            el: '#app'
+            , mounted: function () {
+                this.$nextTick(function () {
+                    // Code that will run only after the
+                    // entire view has been rendered
+//                    this.inputText = this.inputText + this.destination + '?';
+                })
+            }
+            , methods: {
+                submitPrimaryLanguage() {
+                    console.log(this.primaryLanguage);
+                    let text = this.whereLabel
+                    let f = 'en'
+                    let t = this.primaryLanguage
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            console.log(response[0].translations[0].text)
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+//                , switchLanguages() {
+//                    console.log('hi');
+//                    this.newTo = this.selectedToBox;
+//                    this.newFrom = this.selectedFromBox;
+//                    this.selectedToBox = this.newTo;
+//                    this.selectedFromBox = this.newFrom;
+//                }
+                , generateQuestion() {
+                    this.inputText = this.inputText + this.destination + '?';
+                }
+                , getTranslation() {
+                    let text = this.inputText
+                    let fField = document.querySelector("#fromBox")
+                    let tField = document.querySelector("#toBox")
+                    let f = this.selectedFromBox
+                    let t = this.selectedToBox
+                    const url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=" + f + "&to=" + t
+                    fetch(url, {
+                        method: 'POST'
+                        , body: `[{'Text': '` + text + `'}]`
+                        , headers: {
+                            'Content-Type': 'application/json'
+                            , 'Ocp-Apim-Subscription-Key': '0e920c3a66ed4d1784ba714b0b3eb38b'
+                        }
+                    }).then(res => res.json()).then(function (response) {
+                        if (response.length && response[0].translations && response[0].translations[0] && response[0].translations[0].text) {
+                            console.log(response[0].translations[0].text)
+                            document.querySelector('#translationResult').value = response[0].translations[0].text
+                            document.querySelector('#original').innerText = document.querySelector('#textInput').innerText
+                            document.querySelector('#textInput').innerText = ""
+                        }
+                    }).catch(error => console.error('Error:', error));
+                }
+            }
+            , data: {
+                whereLabel:'Where are you going?'
+                ,primaryLanguage:''
+                ,selectedToBox: ''
+                , selectedFromBox: ''
+                , newTo: ''
+                , newFrom: ''
+                , destination: ''
+                , inputText: 'Hi, could you please give me directions to '
+                , question: ''
+                , fullQuestions: ''
+                , languages: [
+                    {
+                        text: 'English'
+                        , value: 'en'
+                    }
+                    , {
+                        text: 'Spanish'
+                        , value: 'es'
+                    }
+    , ]
+            }
+        })
+    </script>
+</body>
+
+</html>
