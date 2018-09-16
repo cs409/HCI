@@ -19,15 +19,15 @@
                         <br>
                         <v-flex xs12>
                             <div v-show="error">
-                                <div v-if="selectedFromBox=='en' || selectedToBox=='en'">
+                                <div v-if="primaryLanguage=='en' || selectedToBox=='en'">
                                     <h2>There seems to be an error in the translated text. It is not understandable.</h2></div>
-                                <div v-if="selectedFromBox=='es' || selectedToBox=='es'">
+                                <div v-if="primaryLanguage=='es' || selectedToBox=='es'">
                                     <h2>Parece haber un error en el texto traducido. No es comprensible</h2></div>
-                                <div v-if="selectedFromBox=='fr' || selectedToBox=='fr'">
+                                <div v-if="primaryLanguage=='fr' || selectedToBox=='fr'">
                                     <h2>Il semble y avoir une erreur dans le texte traduit. Ce n'est pas compréhensible.</h2></div>
-                                <div v-if="selectedFromBox=='zh-Hant' || selectedToBox=='zh-Hant'">
+                                <div v-if="primaryLanguage=='zh-Hant' || selectedToBox=='zh-Hant'">
                                     <h2>翻譯文本似乎有錯誤。 這是不可理解的。</h2></div>
-                                <div v-if="selectedFromBox=='hi' || selectedToBox=='hi'">
+                                <div v-if="primaryLanguage=='hi' || selectedToBox=='hi'">
                                     <h2>अनुवादित पाठ में एक त्रुटि प्रतीत होती है। यह समझ में नहीं आता है।</h2></div>
                                 <v-btn @click="errorFalse()">
                                     <v-icon>{{'close'}}</v-icon>
@@ -66,22 +66,22 @@
                             </v-flex>
                             <v-flex xs12>
                                 <v-btn  large @click="toSecond()" block color="primary">
-                                    <div v-if="selectedFromBox=='en'">Ask for directions
+                                    <div v-if="primaryLanguage=='en'">Ask for directions
                                     </div>
-                                    <div v-if="selectedFromBox=='es'">Preguntar por direcciones</div>
-                                    <div v-if="selectedFromBox=='fr'">Demander des directions</div>
-                                    <div v-if="selectedFromBox=='zh-Hant'">詢問方向</div>
-                                    <div v-if="selectedFromBox=='hi'">दिशा पूछो</div>
+                                    <div v-if="primaryLanguage=='es'">Preguntar por direcciones</div>
+                                    <div v-if="primaryLanguage=='fr'">Demander des directions</div>
+                                    <div v-if="primaryLanguage=='zh-Hant'">詢問方向</div>
+                                    <div v-if="primaryLanguage=='hi'">दिशा पूछो</div>
                                 </v-btn>
                             </v-flex>
                             <v-flex xs12>
                                 <v-btn  large @click="toThird() , clearInput()" block color="primary">
-                                    <div v-if="selectedFromBox=='en'">Give directions
+                                    <div v-if="primaryLanguage=='en'">Give directions
                                     </div>
-                                    <div v-if="selectedFromBox=='es'">Dar direcciones</div>
-                                    <div v-if="selectedFromBox=='fr'">Donner des directives</div>
-                                    <div v-if="selectedFromBox=='zh-Hant'">給出指示</div>
-                                    <div v-if="selectedFromBox=='hi'">दिशा - निर्देश देनाो</div>
+                                    <div v-if="primaryLanguage=='es'">Dar direcciones</div>
+                                    <div v-if="primaryLanguage=='fr'">Donner des directives</div>
+                                    <div v-if="primaryLanguage=='zh-Hant'">給出指示</div>
+                                    <div v-if="primaryLanguage=='hi'">दिशा - निर्देश देनाो</div>
                                 </v-btn>
                             </v-flex>
                         </div> 
@@ -118,19 +118,19 @@
                             </v-btn>
                         </div>
                         <div v-show="third">
-                            <v-flex xs12 v-if="selectedFromBox=='en'">
+                            <v-flex xs12 v-if="primaryLanguage=='en'">
                                 <p class="padding-bottom" >Tip: Ask the other person to type their response, so they can be translated too!</p>
                             </v-flex>
-                            <v-flex xs12 v-if="selectedFromBox=='es'">
+                            <v-flex xs12 v-if="primaryLanguage=='es'">
                                 <p class="padding-bottom" >Consejo: ¡Pídale a la otra persona que escriba su respuesta para que también puedan traducirla!</p>
                             </v-flex>
-                            <v-flex xs12 v-if="selectedFromBox=='fr'">
+                            <v-flex xs12 v-if="primaryLanguage=='fr'">
                                 <p class="padding-bottom" >Conseil: Demandez à l'autre personne de taper sa réponse afin qu'elle puisse être traduite également!</p>
                             </v-flex>
-                            <v-flex xs12 v-if="selectedFromBox=='zh-Hant'">
+                            <v-flex xs12 v-if="primaryLanguage=='zh-Hant'">
                                 <p class="padding-bottom" >提示：請其他人輸入他們的回复，以便他們也可以翻譯！</p>
                             </v-flex>
-                            <v-flex xs12 v-if="selectedFromBox=='hi'">
+                            <v-flex xs12 v-if="primaryLanguage=='hi'">
                                 <p class="padding-bottom" >युक्ति: दूसरे व्यक्ति से उनकी प्रतिक्रिया टाइप करने के लिए कहें, इसलिए उनका भी अनुवाद किया जा सकता है!</p>
                             </v-flex>
 <!--
@@ -139,19 +139,19 @@
                             </v-flex>
 -->
                             <v-flex xs12>
-                                <div v-if="selectedFromBox=='en'">
+                                <div v-if="primaryLanguage=='en'">
                                     <v-textarea id="textInput" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='es'">
+                                <div v-if="primaryLanguage=='es'">
                                     <v-textarea id="textInput" placeholder="Ingrese texto" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='fr'">
+                                <div v-if="primaryLanguage=='fr'">
                                     <v-textarea id="textInput" placeholder="Entrez du texte" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='zh-Hant'">
+                                <div v-if="primaryLanguage=='zh-Hant'">
                                     <v-textarea id="textInput" placeholder="輸入文字" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='hi'">
+                                <div v-if="primaryLanguage=='hi'">
                                     <v-textarea id="textInput" placeholder="लिखना प्रारम्भ करें" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" v-model="inputText"></v-textarea>
                                 </div>
                             </v-flex>
@@ -163,46 +163,46 @@
                                     <v-icon @click="switchLanguages()">{{'swap_horiz'}}</v-icon>
                                 </v-btn>
                                 <div class="language-dropdown">
-                                    <v-select v-if="selectedFromBox=='en'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choose Language" solo></v-select>
-                                    <v-select v-if="selectedFromBox=='es'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Elige lengua" solo></v-select>
-                                    <v-select v-if="selectedFromBox=='fr'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choisissez la langue" solo></v-select>
-                                    <v-select v-if="selectedFromBox=='zh-Hant'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="選擇語言" solo></v-select>
-                                    <v-select v-if="selectedFromBox=='hi'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="भाषा चुनें" solo></v-select>
+                                    <v-select v-if="primaryLanguage=='en'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choose Language" solo></v-select>
+                                    <v-select v-if="primaryLanguage=='es'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Elige lengua" solo></v-select>
+                                    <v-select v-if="primaryLanguage=='fr'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="Choisissez la langue" solo></v-select>
+                                    <v-select v-if="primaryLanguage=='zh-Hant'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="選擇語言" solo></v-select>
+                                    <v-select v-if="primaryLanguage=='hi'" id="toBox" v-model="selectedToBox" :items="languages" placeholder="भाषा चुनें" solo></v-select>
                                 </div>
                             </v-flex>
                             <v-flex xs12>
                                 <v-btn class="padding-bottom" block large color="success" @click="getTranslation()">
-                                    <div v-if="selectedFromBox=='en'">Translate!</div>
-                                    <div v-if="selectedFromBox=='es'">¡Traducir!</div>
-                                    <div v-if="selectedFromBox=='fr'">Traduire!</div>
-                                    <div v-if="selectedFromBox=='zh-Hant'">翻譯！</div>
-                                    <div v-if="selectedFromBox=='hi'">अनुवाद करना!ि</div>
+                                    <div v-if="primaryLanguage=='en'">Translate!</div>
+                                    <div v-if="primaryLanguage=='es'">¡Traducir!</div>
+                                    <div v-if="primaryLanguage=='fr'">Traduire!</div>
+                                    <div v-if="primaryLanguage=='zh-Hant'">翻譯！</div>
+                                    <div v-if="primaryLanguage=='hi'">अनुवाद करना!ि</div>
                                 </v-btn>
                             </v-flex>
                             <v-flex xs12>
-                                <div v-if="selectedFromBox=='en'">
+                                <div v-if="primaryLanguage=='en'">
                                     <v-textarea id="translationResult" placeholder="Enter text" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='es'">
+                                <div v-if="primaryLanguage=='es'">
                                     <v-textarea id="translationResult" placeholder="Ingrese texto" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='fr'">
+                                <div v-if="primaryLanguage=='fr'">
                                     <v-textarea id="translationResult" placeholder="Entrez du texte" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='zh-Hant'">
+                                <div v-if="primaryLanguage=='zh-Hant'">
                                     <v-textarea id="translationResult" placeholder="輸入文字" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
                                 </div>
-                                <div v-if="selectedFromBox=='hi'">
+                                <div v-if="primaryLanguage=='hi'">
                                     <v-textarea id="translationResult" placeholder="लिखना प्रारम्भ करें" clearable auto-grow clear-icon='$vuetify.icons.clear' c solo name="input-7-4" label="" value=""></v-textarea>
                                 </div>
                             </v-flex>
                             <v-flex xs12>
                                 <v-btn class="padding-bottom"  @click="errorTrue()" block outline color="error">
-                                    <div v-if="selectedFromBox=='en'">Error in Translation</div>
-                                    <div v-if="selectedFromBox=='es'">Error en la traducción</div>
-                                    <div v-if="selectedFromBox=='fr'">Erreur de traduction</div>
-                                    <div v-if="selectedFromBox=='zh-Hant'">翻譯錯誤</div>
-                                    <div v-if="selectedFromBox=='hi'">अनुवाद में त्रुटि</div>
+                                    <div v-if="primaryLanguage=='en'">Error in Translation</div>
+                                    <div v-if="primaryLanguage=='es'">Error en la traducción</div>
+                                    <div v-if="primaryLanguage=='fr'">Erreur de traduction</div>
+                                    <div v-if="primaryLanguage=='zh-Hant'">翻譯錯誤</div>
+                                    <div v-if="primaryLanguage=='hi'">अनुवाद में त्रुटि</div>
                                 </v-btn>
                             </v-flex>
                             <v-flex xs12>
@@ -213,11 +213,11 @@
 -->
                                 <a href="https://duke.qualtrics.com/jfe/form/SV_4IXKx8eIgfkqms5">
                                 <v-btn block>
-                                    <div v-if="selectedFromBox=='en'">Complete Interaction</div>
-                                    <div v-if="selectedFromBox=='es'">Interacción completa</div>
-                                    <div v-if="selectedFromBox=='fr'">Interaction complète</div>
-                                    <div v-if="selectedFromBox=='zh-Hant'">完成互動</div>
-                                    <div v-if="selectedFromBox=='hi'">पूर्ण बातचीत</div>
+                                    <div v-if="primaryLanguage=='en'">Complete Interaction</div>
+                                    <div v-if="primaryLanguage=='es'">Interacción completa</div>
+                                    <div v-if="primaryLanguage=='fr'">Interaction complète</div>
+                                    <div v-if="primaryLanguage=='zh-Hant'">完成互動</div>
+                                    <div v-if="primaryLanguage=='hi'">पूर्ण बातचीत</div>
                                 </v-btn>
                                     </a>
                             </v-flex>
